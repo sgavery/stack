@@ -1,14 +1,15 @@
 
 ### To Implement
 
- - [ ] Make README
- - [ ] add relevant sources/references to README
+ - [x] Make README
+ - [x] add relevant sources/references to README
  - [ ] savestate and loadstate to resume execution later
  - [ ] getter for steps
  - [ ] better logging; at least print instruction name
  - [ ] error messages
  - [ ] a few more examples
  - [ ] Testing!
+ - [ ] Put some magic bytes into `.stk` files
 
  - [ ] code generator
 
@@ -20,6 +21,6 @@
  - [ ] Use more specific exceptions in sasm.py
  - [ ] Better commandline for sasm
  - [ ] Prettify disassembler
- - [ ] Fix off-by-one argument in reverse.sasm
-
+ - [ ] Fix counter-intuitive argument in reverse.sasm
+ - [ ] Use `constexpr`
 
