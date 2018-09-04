@@ -1,0 +1,19 @@
+pushdown:                             ; ...[-3] [-2] [-1] [0] k
+          dup                         ; ...[-3] [-2] [-1] [0] k k
+          jumpif  0       case0       ; if k == 0 ...
+          dup                         ; ...[-3] [-2] [-1] [0] k k
+          jumpif  1       case1       ; if k == 1 ...
+          dec                         ; ...[-3] [-2] [-1] [0] (k - 1)
+          pop                         ; ...[-3] [-2] [-1] [0]; (k - 1)
+          swap                        ; ...[-3] [-2] [0] [-1]; (k - 1)
+          push                        ; ...[-3] [-2] [0] [-1] (k - 1)
+          swap                        ; ...[-3] [-2] [0] (k - 1) [-1]
+          pop                         ; ...[-3] [-2] [0] (k - 1); [-1]
+          call            pushdown
+          push
+          ret
+case0:    drop
+          ret
+case1:    drop
+          swap
+          ret

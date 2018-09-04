@@ -1,0 +1,39 @@
+name	ASMkeyword	code	atype1	atype2	consumes	returns	cconsumes	creturns	description
+
+NOP	nop	0xc	none	none	0	0	0	0	does nothing
+
+DROP	drop	0x1	none	none	1	0	0	0	discards top
+POP	pop	0x2	none	none	1	0	0	1	pops onto call
+PUSH	push	0x3	none	none	0	1	1	0	pushes from call
+PUSHVAL	push	0x4	val	none	0	1	0	0	pushes literal
+DUP	dup	0x5	none	none	1	2	0	0	duplicates top
+SWAP	swap	0x6	none	none	2	2	0	0	swaps top two
+INC	inc	0x7	none	none	1	1	0	0	increments top
+DEC	dec	0x8	none	none	1	1	0	0	decrements top
+JMPIF	jumpif	0x9	val	tar	1	0	2+	0	conditional jump
+
+RET	ret	0xa	none	none	0	0	2+	0	absolute return
+CALL	call	0xb	tar	none	0	0	0	2+	absolute call
+ENDMARK		0x0	none	none	0	0	0	0	end marker (reserved)
+CPUSH		0xd	tar	none	0	0	0	2+	push address onto call stack with end marker
+
+GOTO	goto	0x10	none	none	0	0	2+	0	unconditional jump
+METASEP		0x12	none	none	0	0	0	0	meta marker (reserved)
+
+BOOL	bool	0x20	none	none	1	1	0	0	converts top to canonical bool
+NOT	not	0x21	none	none	1	1	0	0	logical not of top
+EQUALS	==	0x22	none	none	2	1	0	0	test equality of top two
+LESS	less	0x23	none	none	2	1	0	0	consumes top two, returns [-1] < [-2]
+GREATER	greater	0x24	none	none	2	1	0	0	consumes top two, returns [-1] > [-2]
+
+ADD	add	0x30	none	none	2	1	0	0	returns sum of top two
+SUB	subtract	0x31	none	none	2	1	0	0	returns [-1] - [-2]
+MUL	mul	0x32	none	none	2	1	0	0	returns product of top two
+DIV	div	0x33	none	none	2	2	0	0	returns remainder, divisor
+
+BITNEG	~	0x40	none	none	1	1	0	0	returns bitwise negation
+BITOR	|	0x41	none	none	2	1	0	0	returns bitwise or
+BITAND	&	0x42	none	none	2	1	0	0	returns bitwise and
+BITXOR	^	0x43	none	none	2	1	0	0	returns bitwise xor
+BITLEFT	<<	0x44	none	none	1	1	0	0	returns leftshift 1
+BITRIGHT	>>	0x45	none	none	1	1	0	0	returns rightshift 1
