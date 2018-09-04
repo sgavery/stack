@@ -1,0 +1,4 @@
+machine/*.o
+machine/stackvm
+__pycache__
+*.stk
