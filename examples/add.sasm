@@ -1,19 +1,19 @@
-Add:                            ;;; add top two elements of stack
-        swap                    ;; check if next is 0
-        dup
-        jumpif 0 second
-        swap                    ; return to original
+Add:                              ;;; add top two elements of stack
+           swap                   ;; check if next is 0
+           dup
+           jumpif  0   second
+           swap                   ; return to original
 
-loop:   dup                     ;; check if top is 0
-        jumpif 0 second
+loop:      dup                    ;; check if top is 0
+           jumpif  0   second
 
-        dec                     ; decrement top
-        swap
-        inc                     ; increment next
-        swap                    ; restore order
+           dec                    ; decrement top
+           swap
+           inc                    ; increment next
+           swap                   ; restore order
 
-        push 0                  ; goto loop
-        jumpif 0 loop
+           push    0              ; goto loop
+           jumpif  0   loop
 
-second: drop
-        ret
+second:    drop
+           ret

@@ -1,7 +1,7 @@
-Bool: ; converts top to canonical bool representation
-       jumpif 0 false
-       push   1
-       ret
+Bool:                             ; converts top to canonical bool representation
+           jumpif  0   false
+           push    1
+           ret
 
-false: push   0
-       ret
+false:     push    0
+           ret

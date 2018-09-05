@@ -1,6 +1,6 @@
 Not:
-          jumpif 0 rettrue
-          push   0
-          ret
-rettrue:  push   1
-          ret
+           jumpif  0   rettrue
+           push    0
+           ret
+rettrue:   push    1
+           ret

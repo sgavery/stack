@@ -1,36 +1,36 @@
 Reverse:
-          dup
-          jumpif 0 revdone
-          dup
-          dec
-          swap
-          pop
-          swap
-          pop
-          call     Reverse
-          push
-          push
-          call     Pushdown
-          ret
-revdone:  drop
-          ret
+           dup
+           jumpif  0   revdone
+           dup
+           dec
+           swap
+           pop
+           swap
+           pop
+           call        Reverse
+           push
+           push
+           call        Pushdown
+           ret
+revdone:   drop
+           ret
 
 Pushdown:
-          dup
-          jumpif 0 case0
-          dup
-          jumpif 1 case1
-          dec
-          pop
-          swap
-          push
-          swap
-          pop
-          call     Pushdown
-          push
-          ret
-case0:    drop
-          ret
-case1:    drop
-          swap
-          ret
+           dup
+           jumpif  0   case0
+           dup
+           jumpif  1   case1
+           dec
+           pop
+           swap
+           push
+           swap
+           pop
+           call        Pushdown
+           push
+           ret
+case0:     drop
+           ret
+case1:     drop
+           swap
+           ret
