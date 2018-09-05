@@ -6,7 +6,7 @@
 #include "stackvm.hpp"
 #include "instcodes.hpp"
 
-const auto initial_memory_size = 1000000;
+constexpr auto initial_memory_size = 1000000;
 
 StackVM::StackVM() {
     pmemory.reserve(initial_memory_size);
