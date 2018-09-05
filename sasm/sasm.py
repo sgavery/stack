@@ -36,7 +36,7 @@ SIGNED_MAXVALUE = -SIGNED_MINVALUE - 1
 keytable = {(stackcode.numargs(s), s.ASMkeyword): s for s in stackcode.specs}
 codetable = {s.code: s for s in stackcode.specs}
 
-ParsedLine = collections.namedtuple('ParsedLine', ['label', 'IC', 'arg1', 'arg2', 'comment'])
+ParsedLine = collections.namedtuple('ParsedLine', ['label', 'IC', 'arg1', 'arg2', 'comment'])  # TODO: change from (arg1, arg2) to (val, target)
 
 
 class AssemblyException(Exception):
@@ -109,8 +109,49 @@ def locationtowords(num):
     return wordlist
 
 
+def tokenize(line):
+    """Breaks line into pieces: (label, inst_spec, value_arg, target_arg, comment)"""
+    # Assumes that there will never be an instruction that takes more
+    # than one value_arg and one target_arg. This could change.
+    commenttext = ''
+    labelname = ''
+    valarg = ''
+    targetarg = ''
+    spec = None
+
+    lineparts = line.split(';')
+    if len(lineparts) > 1:
+        commenttext = ';'.join(lineparts[1:])
+        commenttext = commenttext.strip()
+
+    codetext = lineparts[0].strip()
+    if ':' in codetext:
+        labelname, statement = codetext.split(':')
+        if not labelname.isidentifier():
+            raise TargetException('Invalid label {}'.format(labelname))
+    else:
+        statement = codetext
+
+    toks = statement.split()
+    if toks:
+        try:
+            spec = keytable[len(toks) - 1, toks[0]]
+        except KeyError:
+            raise AssemblyException('Invalid Instruction or number of arguments: {}'.format(toks))
+
+        if len(toks) == 3:
+            valarg, targetarg = toks[1], toks[2]
+        elif len(toks) == 2:
+            if spec.atype1 is stackcode.ArgType.value:
+                valarg = toks[1]
+            else:
+                targetarg = toks[1]
+
+    return labelname, spec, valarg, targetarg, commenttext
+
+
 def parseline(line):
-    """Takes line, returns tuple (labelname, inst_code, arg1, arg2, commenttext)
+    """Takes line, returns parsed_line, target
 
     labelname is left as a string
     inst_code is converted the parsed code point
@@ -120,49 +161,22 @@ def parseline(line):
     commenttext is left as a string
 
     """
-    # remove comment and whitespace
-    lineparts = line.split(';')
+    labelname, spec, valarg, targetarg, commenttext = tokenize(line)
 
-    commenttext = ''
-    labelname = None
     inst_code = None
-    arg1 = None
-    arg2 = None
-    target = None
-    if len(lineparts) > 1:
-        commenttext = lineparts[1]
-
-    codetext = lineparts[0]
-    codetext = codetext.strip()
-    if not codetext:
-        return ParsedLine(labelname, inst_code, arg1, arg2, commenttext), target
-
-    # check for label
-    if ':' in line:
-        labelname, statement = codetext.split(':')
-        if not labelname.isidentifier():
-            raise TargetException('Invalid label {}'.format(labelname))
-    else:
-        statement = codetext
-
-    # number of tokens is used to distinguish naked `push` from a
-    # `push-value` instruction, for example.
-    toks = statement.split()
-    if toks:
-        try:
-            spec = keytable[len(toks) - 1, toks[0]]
-        except KeyError:
-            raise AssemblyException('Invalid instruction or number of arguments: {}'.format(toks))
-
+    if spec:
         inst_code = spec.code
-        if len(toks) > 1:
-            arg1 = convert(spec.atype1, toks[1])
-            if isinstance(arg1, JumpTarget):
-                target = arg1
-        if len(toks) > 2:
-            arg2 = convert(spec.atype2, toks[2])
-            if isinstance(arg2, JumpTarget):
-                target = arg2
+
+    target = None
+    arg1, arg2 = None, None
+    if targetarg:
+        target = convertTarget(targetarg)
+
+    if valarg != '':
+        valarg = convertLiteral(valarg)
+        arg1, arg2 = valarg, target
+    else:
+        arg1 = target
 
     return ParsedLine(labelname, inst_code, arg1, arg2, commenttext), target
 
