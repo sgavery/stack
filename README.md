@@ -7,7 +7,7 @@ Splashing around in the Turing tarpit...
 This is a stack machine emulator and assembler. The motivation is to
 have a simple imperative turing complete language to explore automated
 code search/generation. The instruction set architecture is
-intentially extremely tiny. Human usage of the stack assembly language
+intentionally extremely tiny. Human usage of the stack assembly language
 is contraindicated.
 
 Basic Usage
