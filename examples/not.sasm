@@ -1,4 +1,4 @@
-not:
+Not:
           jumpif 0 rettrue
           push   0
           ret

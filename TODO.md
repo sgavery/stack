@@ -7,9 +7,10 @@
  - [ ] getter for steps
  - [ ] better logging; at least print instruction name
  - [ ] error messages
- - [ ] a few more examples
+ - [x] a few more examples
  - [ ] Testing!
  - [ ] Put some magic bytes into `.stk` files
+ - [ ] sasm auto-formatter
 
  - [ ] code generator
 
