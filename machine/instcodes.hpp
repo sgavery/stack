@@ -26,6 +26,7 @@ enum class ICs : word {
   EQUALS = 0x22,
   LESS = 0x23,
   GREATER = 0x24,
+  CMP = 0x25,
   ADD = 0x30,
   SUB = 0x31,
   MUL = 0x32,

@@ -20,3 +20,7 @@ def generate(fname=SPECIFICATIONFILE):
     enum_text += '};'
 
     return enum_text
+
+
+if __name__ == '__main__':
+    print(generate())
