@@ -17,7 +17,7 @@
 
 ### Bugs
 
- - [ ] Update `NOTES.md` to reflect current design
+ - [x] Update `NOTES.md` to reflect current design
  - [ ] Fix disassembler jump targets
  - [ ] Use more specific exceptions in sasm.py
  - [ ] Better commandline for sasm
