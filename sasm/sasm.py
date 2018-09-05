@@ -72,14 +72,14 @@ def convert(atype, s):
         return convertLiteral(s)
     elif atype is stackcode.ArgType.target:
         return convertTarget(s)
-    raise ValueError('Unknown Type')
+    raise ParseException('Unknown Type')
 
 
 def convertLiteral(literalstring):
     n = int(literalstring)
     if MINVALUE <= n <= MAXVALUE:
         return Literal(n)
-    raise Exception('Invalid Literal')
+    raise ParseException('Invalid Literal')
 
 
 def convertTarget(targetstring):
@@ -141,7 +141,7 @@ def parseline(line):
     if ':' in line:
         labelname, statement = codetext.split(':')
         if not labelname.isidentifier():
-            raise Exception('Invalid label {}'.format(labelname))
+            raise TargetException('Invalid label {}'.format(labelname))
     else:
         statement = codetext
 
@@ -152,7 +152,7 @@ def parseline(line):
         try:
             spec = keytable[len(toks) - 1, toks[0]]
         except KeyError:
-            raise Exception('Invalid instruction or number of arguments: {}'.format(toks))
+            raise AssemblyException('Invalid instruction or number of arguments: {}'.format(toks))
 
         inst_code = spec.code
         if len(toks) > 1:
@@ -313,7 +313,7 @@ def dis(bstring):
             try:
                 args.append(str(next(biter)))
             except StopIteration:
-                raise Exception('Missing arguments')
+                raise AssemblyException('Missing arguments')
         lines.append(' '.join([spec.ASMkeyword, *args]))
 
     return '\n'.join(lines)

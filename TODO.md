@@ -19,7 +19,7 @@
 
  - [x] Update `NOTES.md` to reflect current design
  - [ ] Fix disassembler jump targets
- - [ ] Use more specific exceptions in sasm.py
+ - [x] Use more specific exceptions in sasm.py
  - [ ] Better commandline for sasm
  - [ ] Prettify disassembler
  - [ ] Fix counter-intuitive argument in reverse.sasm
