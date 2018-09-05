@@ -25,9 +25,10 @@ NOT	not	0x21	none	none	1	1	0	0	logical not of top
 EQUALS	==	0x22	none	none	2	1	0	0	test equality of top two
 LESS	less	0x23	none	none	2	1	0	0	consumes top two, returns [-1] < [-2]
 GREATER	greater	0x24	none	none	2	1	0	0	consumes top two, returns [-1] > [-2]
+CMP	cmp	0x25	none	none	2	1	0	0	consumes top two, returns sign(top - next)
 
 ADD	add	0x30	none	none	2	1	0	0	returns sum of top two
-SUB	subtract	0x31	none	none	2	1	0	0	returns [-1] - [-2]
+SUB	sub	0x31	none	none	2	1	0	0	returns [-1] - [-2]
 MUL	mul	0x32	none	none	2	1	0	0	returns product of top two
 DIV	div	0x33	none	none	2	2	0	0	returns remainder, divisor
 
