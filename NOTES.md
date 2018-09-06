@@ -1,5 +1,5 @@
 
-## Stack
+# Stack
 
 ### The "machine"
 
@@ -63,7 +63,7 @@ programming languages.
 ### Instructions
 
 Let us start with the following basic instructions. These are
-sufficient to build up all a complete set of procedures without too
+sufficient to build up a complete set of procedures without too
 much fuss:
  - `nop`: do nothing
  - `drop`: discards top element of data stack
@@ -74,12 +74,12 @@ much fuss:
  - `push <value>`: push literal `value` onto stack
  - `inc`: adds 1 to top element of stack
  - `dec`: subtracts 1 from top element of stack
- - `jumpif <value> <n>`: pop data stack, if it equals literal `value`, jump to offset `n`, otherwise continue
+ - `jumpif <value> <n>`: pop data stack, if it equals literal `value`, jump to line or label `n`, otherwise continue
  - `ret`: current value(s) on top of data stack are taken as output,
    if call stack is empty end program, otherwise jump to instruction
    on call stack.
- - `call n`: increments instruction pointer and pushes it onto call
-   stack, then places `n` into instruction register, and continues
+ - `call <n>`: increments instruction pointer and pushes it onto call
+   stack, then jump to line/label `n` , and continue
    execution there.
 
 Extended instructions:
@@ -127,3 +127,40 @@ See `./examples/`.
    human programming.
  - should `goto` be in the basic instruction set, or `call`?
 
+## Goedel numbering
+
+We would like to order the space of _syntactically valid_ stack
+assembly program texts, to provide a notion of computational
+complexity, a la Kolmogorov. Many of these will be _semantically_
+invalid because they do not halt on valid input, or they attempt to
+over pop the stacks, or do not preserve call stack integrity.
+
+First, we need a set of instructions to consider for our analysis; for
+example, the basic set above. Most instructions are nullary, except
+for `push <value>`, `call <n>`, and `jumpif <value> <n>`. For these,
+we can expand them out by putting in all possible values, and all
+possible line numbers for the number of line numbers under
+consideration. Let us order the instructions as follows for an L-line
+program:
+
+{`drop`, `pop`, `dup`, `swap`, `push`, `inc`, `dec`, `ret`, `push 0`,
+..., `push WORDMAX`, `call 1`, ..., `call L`, `jumpif 0 1`, ...,
+`jumpif WORDMAX 1`, `jumpif 0 2`, ..., `jumpif WORDMAX 2`, ..., ...,
+`jumpif WORDMAX L`}
+
+Let `N` denote the number of words, e.g. 2^8 = 256 for 1 byte words;
+and `L` the number of lines. There are 8 nullary instructions, 1
+unary-value instruction (`N` instructions), 1 unary-jump instruction
+(`L` instructions), and one binary value-jump instruction (`N*L`
+instructions). Thus in total we have `8 + N + L + N*L` possibilities
+for each line of an `L`-line program. Thus, there are `(8 + N + L +
+N*L)^L` syntactically valid `L`-line programs. This is order
+`(N^L)*(L^L)` for large `L`.
+
+For example, let us take 1 byte words, then there are
+
+ * (8 + 256 + 1 + 256)^1 = 521 single-line programs
+ * (8 + 256 + 2 + 256)^2 = 605,284 two-line programs
+ * 1,108,717,875 three-line programs
+ * 2,786,442,301,696 four-line programs
+ * 8,917,786,870,982,749 five-line programs

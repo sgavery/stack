@@ -83,7 +83,7 @@ def convertLiteral(literalstring):
 
 
 def convertTarget(targetstring):
-    if targetstring.isidentifier:
+    if targetstring.isidentifier():
         return LabelName(targetstring)
     # Line numbers shall be 1-indexed, since that seems the standard
     # in text editors, etc.
@@ -207,8 +207,7 @@ def resolvejumps(jumps, linestowords):
     return destmap
 
 
-# This should probably be refactored
-def parsefile(fname):
+def parsestream(fout):
     lines = []
     jumps = []
     pendinglabels = []
@@ -216,36 +215,35 @@ def parsefile(fname):
     lastIC = keytable[0, 'nop'].code
     linestowords = []
     word_est = 0
+    lineno = 0
 
-    with open(fname) as fout:
-        lineno = 0
-        for line in fout:
-            parsed_line, target = parseline(line)
+    for line in fout:
+        parsed_line, target = parseline(line)
 
-            if parsed_line.label:
-                # Wait until there is an actual instruction to assign label
-                pendinglabels.append(parsed_line.label)
+        if parsed_line.label:
+            # Wait until there is an actual instruction to assign label
+            pendinglabels.append(parsed_line.label)
 
-            linestowords.append(word_est)
-            if parsed_line.IC is not None:
-                lastIC = parsed_line.IC
-                word_est += 1
+        linestowords.append(word_est)
+        if parsed_line.IC is not None:
+            lastIC = parsed_line.IC
+            word_est += 1
 
-                if pendinglabels:
-                    for label in pendinglabels:
-                        if label in labelmap:
-                            raise TargetException('Duplicate label: {}'.format(parsed_line.label))
-                        labelmap[label] = lineno
-                    pendinglabels.clear()
-                word_est += int(parsed_line.arg1 is not None) + int(parsed_line.arg2 is not None)
-                if target is not None:  # 0 is a valid target
-                    word_est += 1  # extra for ENDMARK
-                    jumps.append((lineno, target))
+            if pendinglabels:
+                for label in pendinglabels:
+                    if label in labelmap:
+                        raise TargetException('Duplicate label: {}'.format(parsed_line.label))
+                    labelmap[label] = lineno
+                pendinglabels.clear()
+            word_est += int(parsed_line.arg1 is not None) + int(parsed_line.arg2 is not None)
+            if target is not None:  # 0 is a valid target
+                word_est += 1  # extra for ENDMARK
+                jumps.append((lineno, target))
 
-            lines.append(parsed_line)
-            lineno += 1
+        lines.append(parsed_line)
+        lineno += 1
 
-    # Handle implicit ret
+        # Handle implicit ret
     if lastIC != keytable[0, 'ret'].code:
         # Any unattached labels are attached to implicit 'ret'; this
         # may be questionable behavior.
@@ -288,6 +286,12 @@ def parsefile(fname):
         codestream.extend(argtowords(l.arg1, labelmap, destmap))
         codestream.extend(argtowords(l.arg2, labelmap, destmap))
     return bytes(codestream)
+
+
+# This should probably be refactored
+def parsefile(fname):
+    with open(fname) as fout:
+        return parsestream(fout)
 
 
 def argtowords(arg, labelmap, wordmap):
